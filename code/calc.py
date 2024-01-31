@@ -1,11 +1,13 @@
 import re
 
 
-def operation(a: float, b: float, operator: str) -> float:
+def operation(a: float, b: float, operator: str) -> float | str:
     """Return the result of a basic operation
     
-    Only [ + - * / ] supported"""
-    result = 0
+    Only [ + - * / ] supported
+    
+    Return "ZeroDivisionError" if you divide by zero"""
+    
     if operator == "+":
         result = a + b
     elif operator == "-":
@@ -16,11 +18,12 @@ def operation(a: float, b: float, operator: str) -> float:
         try:
             result = a / b
         except ZeroDivisionError:
-            print("You can't divide by zero")
+            return "Zero Division Error"
     return result
 
+
 def closed_parenthesis(text, i_start) -> int:
-    """Return the index at which the parenthesis is closed, if not raise an error"""
+    """Return the index at which the parenthesis is closed, if not return a text error"""
     i_end = i_start + 1
 
     while i_end < len(text):
@@ -29,21 +32,20 @@ def closed_parenthesis(text, i_start) -> int:
         elif text[i_end] == ")":
             return i_end
         i_end += 1
-    
-    raise SyntaxError('Parenthesis not closed')
+    return "\"(\" not closed"
 
-def simplify(number: str) -> int | float:
+
+def simplify(number: str) -> int | float | str:
     """Convert a string number into int or float according to its value
     
-    If it is not a number, return 0"""
+    If it is not a number, return a text error"""
     try:
         result = float(number)
         if result.is_integer():
             return int(result)
         return result
     except ValueError:
-        print("Invalid Syntax")
-        return 0
+        return "Invalid Syntax"
 
 def split_calculation(calc: str) -> list[str]:
     """Split a calculation in different element : parenthesis until it's closed, numbers, operators
@@ -60,6 +62,8 @@ def split_calculation(calc: str) -> list[str]:
             # append the content of the parenthesis
             i_start = i_end
             i_end = closed_parenthesis(calc, i_end)
+            if isinstance(i_end, str):
+                return i_end
             terms.append(calc[i_start:i_end+1])
             i_start = i_end+1
         i_end += 1
@@ -68,7 +72,7 @@ def split_calculation(calc: str) -> list[str]:
     return terms
 
 
-def my_split(text, i_start, i_end):
+def my_split(text, i_start, i_end) -> list[str]:
     """Split a calculation with re module
 
     Return a list of the splited numbers and operators"""
@@ -82,10 +86,12 @@ def my_split(text, i_start, i_end):
 
 
 
-def calculate(calc: str) -> float:
+def calculate(calc: str) -> float | str:
     """Return the result of a calculation string
 
     Only support [ + - * / ]
+
+    If an error occurs, it returns an error message
 
     ---
     TODO 
@@ -97,8 +103,7 @@ def calculate(calc: str) -> float:
     supported_char = list('0123456789+-*/.()')
     for char in calc:
         if char not in supported_char:
-            print("Unknown character")
-            return 0
+            return "Unknown character"
     
     # if it is englobed by parentheses, remove them
     if calc.startswith('('):
@@ -108,6 +113,8 @@ def calculate(calc: str) -> float:
 
     # splitting the calculation
     terms = split_calculation(calc)
+    if isinstance(terms, str): # not closed parenthesis
+        return terms
     if len(terms) <= 1:
         return simplify(calc)
 
@@ -125,10 +132,8 @@ def calculate(calc: str) -> float:
     operator = terms[i_operator]
     left_term = calculate(''.join(terms[:i_operator]))
     right_term = calculate(''.join(terms[i_operator+1:]))
+    if isinstance(left_term, str):
+        return left_term
+    elif isinstance(right_term, str):
+        return right_term
     return operation(left_term, right_term, operator)
-        
-
-
-
-if __name__ == "__main__":
-    print(calculate('-5+(5+3)-5'))
