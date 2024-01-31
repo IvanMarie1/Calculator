@@ -13,4 +13,4 @@ The calculator works with mainly two programs
 
 ## Preview
 
-<img src="https://i.ibb.co/FsmXPdQ/image.png" alt="image" width="250">
+<img src="https://i.ibb.co/bvqbNXR/image.png" alt="calculator-app-image" width="250">
