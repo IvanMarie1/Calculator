@@ -67,9 +67,9 @@ def create_calc() -> tuple[Tk, StringVar, StringVar]:
     screen_frame.pack_propagate(0)
     screen_frame.grid(column=1, row=1, columnspan=8, rowspan=3)
 
-    screen_input = Label(screen_frame, textvariable=text_input, bg="#edf2f4", padx=UNIT//2, pady=UNIT//2, justify=LEFT, font=my_font)
+    screen_input = Label(screen_frame, textvariable=text_input, bg="#edf2f4", padx=UNIT//2, pady=UNIT//2, justify=LEFT, anchor=NW, font=my_font)
     screen_input.pack(anchor=NW)
-    screen_output = Label(screen_frame, textvariable=text_output, bg="#edf2f4", padx=UNIT//2, pady=UNIT//2, justify=RIGHT, font=my_font)
+    screen_output = Label(screen_frame, textvariable=text_output, bg="#edf2f4", padx=UNIT//2, pady=UNIT//2, justify=RIGHT, anchor=SE, font=my_font)
     screen_output.pack(anchor=SE)
 
 
