@@ -102,6 +102,34 @@ def create_calc() -> tuple[Tk, StringVar, StringVar]:
         btn = my_buttons[i]
         temp_btn = Button(root, text=btn['text'], bg=btn['bg'], activebackground=btn['act-bg'], font=my_font, command=btn['cmd'])
         temp_btn.grid(row=5+(i//4)*2, column=1+(i%4)*2, columnspan=2, rowspan=2, sticky="nsew")
+    
+
+    key_events = [
+        ('0', lambda e: change_screen(text_input, text_output, '0')),
+        ('1', lambda e: change_screen(text_input, text_output, '1')),
+        ('2', lambda e: change_screen(text_input, text_output, '2')),
+        ('3', lambda e: change_screen(text_input, text_output, '3')),
+        ('4', lambda e: change_screen(text_input, text_output, '4')),
+        ('5', lambda e: change_screen(text_input, text_output, '5')),
+        ('6', lambda e: change_screen(text_input, text_output, '6')),
+        ('7', lambda e: change_screen(text_input, text_output, '7')),
+        ('8', lambda e: change_screen(text_input, text_output, '8')),
+        ('9', lambda e: change_screen(text_input, text_output, '9')),
+        ('period', lambda e: change_screen(text_input, text_output, '.')),
+        ('plus', lambda e: change_screen(text_input, text_output, '+')),
+        ('minus', lambda e: change_screen(text_input, text_output, '-')),
+        ('asterisk', lambda e: change_screen(text_input, text_output, '*')),
+        ('slash', lambda e: change_screen(text_input, text_output, '/')),
+        ('parenleft', lambda e: change_screen(text_input, text_output, '(')),
+        ('parenright', lambda e: change_screen(text_input, text_output, ')')),
+        ('Return', lambda e: output_result(text_input, text_output)),
+        ('equal', lambda e: output_result(text_input, text_output)),
+        ('BackSpace', lambda e: del_screen(text_input, text_output)),
+        ('Delete', lambda e: clear_screen(text_input, text_output))
+    ]
+
+    for key, event in key_events:
+        root.bind(f'<Key-{key}>', event)
 
 
     return (root, text_input, text_output)
