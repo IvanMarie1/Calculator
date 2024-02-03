@@ -12,5 +12,4 @@ The calculator works with mainly two programs
 - a GUI with Tkinter to input the calculation and output the result
 
 ## Preview
-
-<img src="https://i.ibb.co/bvqbNXR/image.png" alt="calculator-app-image" width="250">
+<img src="https://i.ibb.co/3dGJWxJ/image.png" alt="image" width="250">
