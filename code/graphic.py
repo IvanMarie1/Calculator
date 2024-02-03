@@ -22,6 +22,8 @@ class Calculator:
         text in the output line
     history : list
         List of all the previous calculations
+    cursor : int
+        Position of the cursor in the input line
     
     Methods
     -------
@@ -48,19 +50,20 @@ class Calculator:
         self.root = Tk()
         self.name = name
         self.unit = width // 10
-        self.font = f'Courier {width//21} bold'
-        self.input = StringVar()
+        self.font = f'Arial {width//21} bold'
+        self.input = StringVar(value="|")
         self.output = StringVar()
         self.history = []
+        self.cursor = 0
 
     
     def setup(self) -> None:
         """Build all the widgets in the calculator"""
+
         colors = {'r1': '#EF233C', 'r2': "#D90429", 
                   'g1': "#8D99AE", 'g2': "#7B879C", 
                   'w1': "#EDF2F4", 'w2': "#CED4DA", 
                   'b1': "#2B2D42"}
-
         
         self.root.title(self.name)
         self.root.resizable(False, False)
@@ -128,7 +131,11 @@ class Calculator:
                 ('Return', lambda e: self.result()),
                 ('equal', lambda e: self.result()),
                 ('BackSpace', lambda e: self.backspace()),
-                ('Delete', lambda e: self.clear())
+                ('Delete', lambda e: self.clear()),
+                ('Up', lambda e: self.move(e.keysym)),
+                ('Down', lambda e: self.move(e.keysym)),
+                ('Right', lambda e: self.move(e.keysym)),
+                ('Left', lambda e: self.move(e.keysym))
             ]
 
         for key, event in key_events:
@@ -140,7 +147,7 @@ class Calculator:
 
 
     def add_char(self, char: str):
-        """Add a character at the end of the input
+        """Add a character at the cursor position
         
         If there was a previous calculation, it clears it
         
@@ -151,13 +158,17 @@ class Calculator:
 
         if len(self.output.get()) > 0:
             self.clear()
-        self.input.set(self.input.get() + char)
+
+        new_input = f"{char}|".join(self.input.get().split('|'))
+        self.input.set(new_input)
+        self.cursor += 1
 
 
     def clear(self):
         """Clear all the texts in the calculator screen"""
-        self.input.set('')
+        self.input.set('|')
         self.output.set('')
+        self.cursor = 0
 
 
     def backspace(self):
@@ -166,12 +177,31 @@ class Calculator:
         If an output is present, it clears the screen"""
         if len(self.output.get()) > 0:
             self.clear()
-        self.input.set(self.input.get()[:-1])
+        self.input.set(self.input.get()[:self.cursor-1] + self.input.get()[self.cursor:])
+        self.cursor -= 1
 
 
     def result(self):
         """Output the result of the input line and add it to the history"""
-
-        result = calculate(self.input.get())
+        calculation = "".join(self.input.get().split("|"))
+        result = calculate(calculation)
         self.output.set(str(result))
         self.history.append([self.input.get(), self.output.get()])
+    
+
+    def move(self, key):
+        """Move the cursor in a certain direcion"""
+        if len(self.output.get()) > 0:
+            self.clear()
+            
+        text = self.input.get()
+        i = self.cursor
+        if key == "Right" and self.cursor < len(text)-1:
+            new_text = f"{ text[:self.cursor] }{ text[self.cursor+1] }|{ text[self.cursor+2:] }"
+            self.input.set(new_text)
+            self.cursor += 1
+
+        elif key == "Left" and self.cursor > 0:
+            new_text = f"{ text[:self.cursor-1] }|{ text[self.cursor-1] }{ text[self.cursor+1:] }"
+            self.input.set(new_text)
+            self.cursor -= 1
