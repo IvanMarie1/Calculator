@@ -29,13 +29,13 @@ class Calculator:
         build the widgets of the calculator
     run()
         run the mainloop of Tk
-    change_screen(char)
+    add_char(char)
         add a character at the end of the input line
-    clear_screen()
+    clear()
         remove all the text from the screen
-    del_screen()
+    backspace()
         remove the last character of the input line
-    output_result()
+    result()
         output the result of the calculation in the input line"""
 
     def __init__(self, name:str ='Calculator', width:int =350):
@@ -56,13 +56,19 @@ class Calculator:
     
     def setup(self) -> None:
         """Build all the widgets in the calculator"""
+        colors = {'r1': '#EF233C', 'r2': "#D90429", 
+                  'g1': "#8D99AE", 'g2': "#7B879C", 
+                  'w1': "#EDF2F4", 'w2': "#CED4DA", 
+                  'b1': "#2B2D42"}
+
+        
         self.root.title(self.name)
         self.root.resizable(False, False)
 
-        frame = Frame(self.root, bg="#2b2d42", width=10*self.unit, height=16*self.unit, relief=RAISED, borderwidth=self.unit//3)
+        frame = Frame(self.root, bg=colors["b1"], width=10*self.unit, height=16*self.unit)
         frame.grid(sticky='nsew', columnspan=10, rowspan=16)
 
-        screen_frame = Frame(self.root, height=self.unit*3, width=self.unit*8)
+        screen_frame = Frame(self.root, height=self.unit*3, width=self.unit*8, bg=colors['w1'])
         screen_frame.pack_propagate(0)
         screen_frame.grid(column=1, row=1, columnspan=8, rowspan=3)
 
@@ -73,55 +79,56 @@ class Calculator:
         
 
         buttons = [
-            {"text": "C", "bg": "#ef233c", "act-bg": "#d90429", "cmd":lambda: self.clear_screen()},
-            {"text": "del", "bg": "#ef233c", "act-bg": "#d90429", "cmd":lambda: self.del_screen()},
-            {"text": "(", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('(')},
-            {"text": ")", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen(')')},
-            {"text": "7", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('7')},
-            {"text": "8", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('8')},
-            {"text": "9", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('9')},
-            {"text": "/", "bg": "#edf2f4", "act-bg": "#ced4da", "cmd": lambda: self.change_screen('/')},
-            {"text": "4", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('4')},
-            {"text": "5", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('5')},
-            {"text": "6", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('6')},
-            {"text": "*", "bg": "#edf2f4", "act-bg": "#ced4da", "cmd": lambda: self.change_screen('*')},
-            {"text": "1", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('1')},
-            {"text": "2", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('2')},
-            {"text": "3", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('3')},
-            {"text": "-", "bg": "#edf2f4", "act-bg": "#ced4da", "cmd": lambda: self.change_screen('-')},
-            {"text": "0", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('0')},
-            {"text": ".", "bg": "#8d99ae", "act-bg": "#79869c", "cmd": lambda: self.change_screen('.')},
-            {"text": "=", "bg": "#ef233c", "act-bg": "#d90429", "cmd":lambda: self.output_result()},
-            {"text": "+", "bg": "#edf2f4", "act-bg": "#ced4da", "cmd": lambda: self.change_screen('+')}
+            {"txt": "C", "c": ('r1', 'r2'), "cmd":lambda: self.clear()},
+            {"txt": "del", "c": ('r1', 'r2'), "cmd":lambda: self.backspace()},
+            {"txt": "(", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('(')},
+            {"txt": ")", "c": ('g1', 'g2'), "cmd": lambda: self.add_char(')')},
+            {"txt": "7", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('7')},
+            {"txt": "8", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('8')},
+            {"txt": "9", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('9')},
+            {"txt": "/", "c": ('w1', 'w2'), "cmd": lambda: self.add_char('/')},
+            {"txt": "4", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('4')},
+            {"txt": "5", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('5')},
+            {"txt": "6", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('6')},
+            {"txt": "*", "c": ('w1', 'w2'), "cmd": lambda: self.add_char('*')},
+            {"txt": "1", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('1')},
+            {"txt": "2", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('2')},
+            {"txt": "3", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('3')},
+            {"txt": "-", "c": ('w1', 'w2'), "cmd": lambda: self.add_char('-')},
+            {"txt": "0", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('0')},
+            {"txt": ".", "c": ('g1', 'g2'), "cmd": lambda: self.add_char('.')},
+            {"txt": "=", "c": ('r1', 'r2'), "cmd":lambda: self.result()},
+            {"txt": "+", "c": ('w1', 'w2'), "cmd": lambda: self.add_char('+')}
         ]
 
         for i in range(len(buttons)):
             btn = buttons[i]
-            temp_btn = Button(self.root, text=btn['text'], bg=btn['bg'], activebackground=btn['act-bg'], borderwidth=self.unit//7, font=self.font, command=btn['cmd'])
-            temp_btn.grid(row=5+(i//4)*2, column=1+(i%4)*2, columnspan=2, rowspan=2, sticky="nsew")
+            c1, c2 = colors[btn["c"][0]], colors[btn["c"][1]]
+            temp_btn = Button(self.root, text=btn['txt'], bg=c1, activebackground=c2, relief=FLAT, font=self.font, borderwidth=0, command=btn['cmd'])
+            temp_btn.grid(row=5+(i//4)*2, column=1+(i%4)*2, columnspan=2, rowspan=2, sticky="nsew", padx=1, pady=1)
         
         key_events = [
-                ('0', lambda e: self.change_screen('0')),
-                ('1', lambda e: self.change_screen('1')),
-                ('2', lambda e: self.change_screen('2')),
-                ('3', lambda e: self.change_screen('3')),
-                ('4', lambda e: self.change_screen('4')),
-                ('5', lambda e: self.change_screen('5')),
-                ('6', lambda e: self.change_screen('6')),
-                ('7', lambda e: self.change_screen('7')),
-                ('8', lambda e: self.change_screen('8')),
-                ('9', lambda e: self.change_screen('9')),
-                ('period', lambda e: self.change_screen('.')),
-                ('plus', lambda e: self.change_screen('+')),
-                ('minus', lambda e: self.change_screen('-')),
-                ('asterisk', lambda e: self.change_screen('*')),
-                ('slash', lambda e: self.change_screen('/')),
-                ('parenleft', lambda e: self.change_screen('(')),
-                ('parenright', lambda e: self.change_screen(')')),
-                ('Return', lambda e: self.output_result()),
-                ('equal', lambda e: self.output_result()),
-                ('BackSpace', lambda e: self.del_screen()),
-                ('Delete', lambda e: self.clear_screen())
+                ('0', lambda e: self.add_char('0')),
+                ('1', lambda e: self.add_char('1')),
+                ('2', lambda e: self.add_char('2')),
+                ('3', lambda e: self.add_char('3')),
+                ('4', lambda e: self.add_char('4')),
+                ('5', lambda e: self.add_char('5')),
+                ('6', lambda e: self.add_char('6')),
+                ('7', lambda e: self.add_char('7')),
+                ('8', lambda e: self.add_char('8')),
+                ('9', lambda e: self.add_char('9')),
+                ('period', lambda e: self.add_char('.')),
+                ('plus', lambda e: self.add_char('+')),
+                ('minus', lambda e: self.add_char('-')),
+                ('asterisk', lambda e: self.add_char('*')),
+                ('slash', lambda e: self.add_char('/')),
+                ('parenleft', lambda e: self.add_char('(')),
+                ('parenright', lambda e: self.add_char(')')),
+                ('Return', lambda e: self.result()),
+                ('equal', lambda e: self.result()),
+                ('BackSpace', lambda e: self.backspace()),
+                ('Delete', lambda e: self.clear())
             ]
 
         for key, event in key_events:
@@ -132,7 +139,7 @@ class Calculator:
         self.root.mainloop()
 
 
-    def change_screen(self, char: str):
+    def add_char(self, char: str):
         """Add a character at the end of the input
         
         If there was a previous calculation, it clears it
@@ -143,26 +150,26 @@ class Calculator:
             character to insert at the end of the line"""
 
         if len(self.output.get()) > 0:
-            self.clear_screen()
+            self.clear()
         self.input.set(self.input.get() + char)
 
 
-    def clear_screen(self):
+    def clear(self):
         """Clear all the texts in the calculator screen"""
         self.input.set('')
         self.output.set('')
 
 
-    def del_screen(self):
+    def backspace(self):
         """Delete the last character from the input
         
         If an output is present, it clears the screen"""
         if len(self.output.get()) > 0:
-            self.clear_screen()
+            self.clear()
         self.input.set(self.input.get()[:-1])
 
 
-    def output_result(self):
+    def result(self):
         """Output the result of the input line and add it to the history"""
 
         result = calculate(self.input.get())
