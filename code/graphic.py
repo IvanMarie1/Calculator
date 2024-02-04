@@ -177,8 +177,9 @@ class Calculator:
         If an output is present, it clears the screen"""
         if len(self.output.get()) > 0:
             self.clear()
-        self.input.set(self.input.get()[:self.cursor-1] + self.input.get()[self.cursor:])
-        self.cursor -= 1
+        if self.cursor > 0:
+            self.input.set(self.input.get()[:self.cursor-1] + self.input.get()[self.cursor:])
+            self.cursor -= 1
 
 
     def result(self):
